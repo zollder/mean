@@ -1,12 +1,12 @@
 
 
-# mean
-
-
+# MEAN stack +
+- NodeJS
+- Express
+- Bootstrap
+- Jade
 
 ## Usage
-
-
 
 ## Developing
 
@@ -16,12 +16,5 @@ From the command line run:
 
 ## Testing
 	
+## Tools
 
-### Tools
-
-
-## Available page URLs:
-List of locations:	/
-Location details:	/location
-Location review:		/location/review
-About:					/about
