@@ -5,6 +5,8 @@
 - Express
 - Bootstrap
 - Jade
+- MongoDB
+- Mongoose
 
 ## Usage
 
