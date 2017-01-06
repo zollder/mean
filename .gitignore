@@ -21,6 +21,7 @@ gradle-app.setting
 *.settings
 *.sublime-project
 *.tern-project
+*.log
 
 # Frontend libs
 node_modules
