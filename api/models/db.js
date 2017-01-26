@@ -75,4 +75,5 @@ process.once('SIGTERM', function() {
 	});
 });
 
+// bring in defined schemas and models
 require('./locations-model');
