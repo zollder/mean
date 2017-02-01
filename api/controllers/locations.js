@@ -29,7 +29,6 @@ var converter = function() {
 }();
 
 var builder = function(result) {
-	
 	var getLocationsList = function(results) {
 		var locations = [];
 		results.forEach(function(doc) {
@@ -75,10 +74,10 @@ module.exports.getLocationsByDistance = function(req, res) {
 		coordinates: [ longitude, latitude ]
 	};
 	// geo options (type, max distance, max items)
-	var maxDist = parseFloat(req.query.radius);
+//	var maxDist = req.query.radius ? parseFloat(req.query.radius) : 20;
 	var options = {
 		spherical: true,
-		maxDistance: converter.getRadians(maxDist ? maxDist : 20),
+//		maxDistance: converter.getRadians(maxDist ? maxDist : 20),
 		num: 10
 	};
 	
@@ -104,16 +103,21 @@ module.exports.getLocationsByDistance = function(req, res) {
  * - handles errors, if any
  */
 module.exports.getLocationById = function(req, res) {
-	if (!req.params || !req.params.locationId) {
-		sendJsonResponse(res, 404, { "message":"Missing or invalid locationId."});
+	if (!req.params) {
+		sendJsonResponse(res, 404, { "message":"Missing params."});
+		return;
+	}
+	var locationId = req.params.locationId;
+	if (!locationId){
+		sendJsonResponse(res, 404, { "message":"Missing locationId."});
 		return;
 	}
 
-	locationDao.findById(req.params.locationId)
+	locationDao.findById(locationId)
 		.exec(
 			function(error, location) {
 				if (!location) {
-					sendJsonResponse(res, 404, { "message":"Location not found for specified ID:" + req.params.locationId });
+					sendJsonResponse(res, 404, { "message":"Location not found for specified ID:" + locationId });
 					return;
 				}
 				if (error) {
@@ -161,7 +165,7 @@ module.exports.createLocation = function(req, res) {
 	// persist and report
 	locationDao.create(data, function(error, location) {
 		if (error) {
-			sendJsonResponse(res, 404, error);
+			sendJsonResponse(res, 400, error);
 			return;
 		}
 		sendJsonResponse(res, 200, location);

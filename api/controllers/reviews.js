@@ -78,12 +78,13 @@ module.exports.createReview = function(req, res) {
 				location.reviews.push({
 					author: req.body.author,
 					rating: req.body.rating,
-					eviewText: req.body.reviewText
+					reviewText: req.body.reviewText
 				});
 				location.save(function(err, location) {
 					var savedReview;
 					if (err) {
-						sendJsonResponse(res, 404, err);
+						console.log(err);
+						sendJsonResponse(res, 400, err);
 					} else {
 						updateAverageRating(req.params.locationId)
 						// retrieve and return the last sub-document (review)

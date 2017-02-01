@@ -42,17 +42,18 @@ block content
                 .col-xs-12
                     .panel.panel-primary.review-panel
                         .panel-heading
-                            a.btn.btn-default.pull-right(href='/location/review') Add review
+                            a.btn.btn-default.pull-right(href='/location/#{location._id}/review') Add review
                             h2.panel-title Customer reviews
                         .panel-body.review-container
-                            each review in reviews
+                            each review in location.reviews
                                 .row
                                     .review
                                         .well.well-sm.review-header
                                             span.rating
                                                 +setRating(review.rating)
                                             span.reviewAuthor #{review.author}
-                                            small.reviewTimestamp #{review.timestamp}
+                                            small.reviewTimestamp.pull-right
+                                                +formatDate(review.createdOn)
                                         .col-xs-12
                                             p !{(review.reviewText).replace(/\n/g, '<br/>')}
         .col-xs-12.col-md-3
