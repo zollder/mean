@@ -19,11 +19,10 @@ module.exports.home = function(req, res) {
 		url: apiOptions.server + path,
 		method: "GET",
 		json: {},
-		// TODO: fix coordinates
 		qs: {
-			lng: -73.624151,
-			lat: 45.496845,
-			radius: 20
+			lng: -73.574884,
+			lat: 45.48288,
+			radius: 5	//km
 		}
 	};
 
@@ -128,10 +127,9 @@ var getLocationDetails = function(req, res, callback) {
 			showError(req, res, response.statusCode);
 		} else {
 			var data = body;
-			// TODO: fix coordinates
 			data.coordinates = {
-					lat: 51.455041,
-					lng: -0.9690884
+				lng: body.geolocation.coordinates[0],
+				lat: body.geolocation.coordinates[1]
 			};
 			callback(req, res, data);
 		}

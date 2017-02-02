@@ -8,33 +8,35 @@ var sendJsonResponse = function(res, status, content) {
 	res.jsonp(content);
 };
 
+/**
+ * Distance converter.
+ */
 var converter = function() {
-	var earthRadius = 6371; //km
-
-	/* Converts radians to distance = radians x (Earth's radius) */
-	var getDistance = function(rads) {
-		return parseFloat(rads * earthRadius);
+	var kmToM = function(distance) {
+		return parseFloat(distance * 1000);
 	};
 
-	/* Converts distance to radians = distance/(Earth's radius) */
-	var getRadians = function(distance) {
-		return parseFloat(distance/earthRadius);
+	var mToKm = function(distance) {
+		return parseFloat(distance / 1000);
 	};
 
 	// expose functions
 	return {
-		getDistance : getDistance,
-		getRadians : getRadians
+		kmToM : kmToM,
+		mToKm : mToKm
 	};
 }();
 
+/**
+ * Builds a list of location from the DB response.
+ */
 var builder = function(result) {
 	var getLocationsList = function(results) {
 		var locations = [];
 		results.forEach(function(doc) {
 			locations.push(
 				{
-					distance: converter.getDistance(doc.dis),
+					distance: converter.mToKm(doc.dis),
 					name: doc.obj.name,
 					address: doc.obj.address,
 					rating: doc.obj.rating,
@@ -44,7 +46,8 @@ var builder = function(result) {
 		});
 		return locations;
 	};
-	
+
+	// expose the function
 	return {
 		getLocations : getLocationsList
 	};
@@ -62,25 +65,24 @@ module.exports.getLocationsByDistance = function(req, res) {
 		return;
 	}
 
-	var longitude = parseFloat(req.query.lng);
-	var latitude = parseFloat(req.query.lat);
-	if (!longitude || !latitude) {
+	var lng = parseFloat(req.query.lng);
+	var lat = parseFloat(req.query.lat);
+	if (!lng || !lat) {
 		sendJsonResponse(res, 404, { "message":"Invalid or missing coordinates."});
 		return;
 	}
 
+	// geoJson
 	var point = {
 		type: "Point",
-		coordinates: [ longitude, latitude ]
+		coordinates: [lng, lat]
 	};
 	// geo options (type, max distance, max items)
-//	var maxDist = req.query.radius ? parseFloat(req.query.radius) : 20;
 	var options = {
 		spherical: true,
-//		maxDistance: converter.getRadians(maxDist ? maxDist : 20),
-		num: 10
+		maxDistance: converter.kmToM(parseFloat(req.query.radius || 0))
 	};
-	
+	console.log("GEO OPTIONS: " + JSON.stringify(options));
 	locationDao.geoNear(point, options, function(error, results, stats) {
 		if (error) {
 			sendJsonResponse(res, 404, error);
@@ -143,10 +145,12 @@ module.exports.createLocation = function(req, res) {
 		name: req.body.name,
 		address: req.body.address,
 		facilities: req.body.facilities.split(','),
-		coordinates: [
-			parseFloat(req.body.lat),
-			parseFloat(req.body.lng)
-		],
+		geolocation: {
+			coordinates: [
+   				parseFloat(req.body.lng) || 0,
+   				parseFloat(req.body.lat) || 0
+			]
+		},
 		openingTimes: [
    			{
    				days: req.body.days1,
@@ -155,10 +159,10 @@ module.exports.createLocation = function(req, res) {
    				closed: req.body.closed1
    			},
    			{
-   				days: req.body.days2,
-   				opening: req.body.opening2,
-   				closing: req.body.closing2,
-   				closed: req.body.closed2
+   				days: req.body.days2 || "",
+   				opening: req.body.opening2 || "",
+   				closing: req.body.closing2 || "",
+   				closed: req.body.closed2 || true
    			}
 		]
 	};
@@ -202,24 +206,24 @@ module.exports.updateLocation = function(req, res) {
 				}
 
 				// update model
-				location.name = req.body.name ? req.body.name : location.name;
-				location.address = req.body.address ? req.body.address : location.address;
+				location.name = req.body.name || location.name;
+				location.address = req.body.address || location.address;
 				location.facilities = req.body.facilities ? req.body.facilities.split(",") : location.facilities;
 				location.coordinates = [ parseFloat(req.body.lng), parseFloat(req.body.lat) ];
-/*				location.openingTimes = [
+				location.openingTimes = [
 	                {
-	                	days: req.body.days1,
-	                	opening: req.body.opening1,
-	                	closing: req.body.closing1,
-	                	closed: req.body.closed1
+	                	days: req.body.days1 || location.openingTimes[0].days,
+	                	opening: req.body.opening1 || location.openingTimes[0].opening,
+	                	closing: req.body.closing1 || location.openingTimes[0].closing,
+	                	closed: req.body.closed1 || !!location.openingTimes[0].closed
 					},
 	                {
-	                	days: req.body.days2,
-	                	opening: req.body.opening2,
-	                	closing: req.body.closing2,
-	                	closed: req.body.closed2
+	                	days: req.body.days2 || location.openingTimes[1].days,
+	                	opening: req.body.opening2 || location.openingTimes[1].opening,
+	                	closing: req.body.closing2 || location.openingTimes[1].closing,
+	                	closed: req.body.closed2 || !!location.openingTimes[1].closed
 					}
-                ];*/
+                ];
 
 				// save changes
 				location.save(function(error, location) {

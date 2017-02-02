@@ -47,12 +47,23 @@ var locationSchema = new mongoose.Schema({
 		max:5
 	},
 	facilities: [String],
-	coordinates: {
-		type:[Number],
-		index:'2dsphere'
+	geolocation: {
+		type: {
+			type: String,
+			default: 'Point'
+		},
+		coordinates: [Number]		// preserve the order: [longitude, latitude]
 	},
 	openingTimes: [openingTimeSchema],
 	reviews: [reviewSchema]
 });
+// define an index for GEO location
+locationSchema.index({ geolocation:'2dsphere'});
 
-mongoose.model('Location', locationSchema, 'locations');
+mongoose.model('Location', locationSchema);
+
+
+/**
+ * http://geojson.org/geojson-spec.html#examples
+ */
+
