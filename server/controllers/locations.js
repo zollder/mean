@@ -71,6 +71,7 @@ module.exports.addReview = function(req, res) {
 
 /**
  * Saves new location review form data.
+ * Performs basic form validation.
  */
 module.exports.saveReview = function(req, res) {
 	var locationId = req.params.locationId;
@@ -85,20 +86,24 @@ module.exports.saveReview = function(req, res) {
 		method: "POST",
 		json: postData
 	};
-
-	request(requestOptions, function(error, response, body) {
-		if (error) {
-			console.log(error);
-			return;
-		}
-		
-		if (response.statusCode != 201) {
-			showError(req, res, response.statusCode);
-			return;
-		}
-
-		res.redirect('/location/' + locationId);
-	});
+	// validate form fields before calling API, use query string to display error message
+	if (!postData.author || !postData.rating || !postData.reviewText) {
+		res.redirect('/location/' + locationId + '/review?error=value');
+	} else {
+		request(requestOptions, function(error, response, body) {
+			if (error) {
+				console.log("Error details: " + error);
+				return;
+			} else if (response.statusCode === 201) {
+				res.redirect('/location/' + locationId);
+			} else if (response.statusCode === 400 && body.name && body.name === "ValidationError") {
+				// API level validation
+				res.redirect('/location/' + locationId + '/review?error=value');
+			} else {
+				showError(req, res, response.statusCode);
+			}
+		});
+	}
 };
 
 /**
@@ -180,6 +185,7 @@ var renderReviewForm = function(req, res, locationDetails) {
 	res.render('location-review-form', {
 		submitButton: { title: 'Add Review' },
 		pageHeader: { title: "Review " + locationDetails.name },
+		error: req.query.error
 	});
 };
 
