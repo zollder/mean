@@ -8,15 +8,39 @@ var bodyParser = require('body-parser');
 // import the model
 require('./api/models/db')
 
-var routes = require('./server/routes/index');
+// minify/uglify
+/*var uglifyJs = require("uglify-js");
+var fs = require('fs');*/
+
 var routesApi = require('./api/routes/index');
-var users = require('./server/routes/users');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'server', 'views'));
-app.set('view engine', 'jade');
+//app.set('views', path.join(__dirname, 'server', 'views'));
+//app.set('view engine', 'jade');
+
+/*
+ * List the files to be minified and uglified in an array,
+ * uglify/minify and save to the file system.
+ * Note: link the resulting file to the core layout, replacing individual file links.
+ */ 
+/*var clientFiles = [
+	'client/spapp.js',
+	'client/controllers/home.controller.js',
+	'client/commons/directives/ratingStars.directive.js',
+	'client/commons/filters/formatDistance.filter.js',
+	'client/commons/services/data.service.js',
+	'client/commons/services/geo.service.js'
+];
+var uglified = uglifyJs.minify(clientFiles, { compress : false });
+fs.writeFile('public/angular/spapp.min.js', uglified.code, function(error) {
+	if (error) {
+		console.log(error);
+	} else {
+		console.log('Script generated and saved: spapp.min.js');
+	}
+});*/
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -24,11 +48,17 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+// serve static content from these locations
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client')));
+
+//app.use('/', routes);
 app.use('/api', routesApi);
-app.use('/users', users);
+
+app.use(function(req, res) {
+	res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

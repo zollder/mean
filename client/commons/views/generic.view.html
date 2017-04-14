@@ -1,0 +1,14 @@
+<navigation></navigation>
+
+<div class="container">
+	<page-header content="vm.pageHeader"></page-header>
+	
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<!-- bind data to a directive, rather than an doing inline data binding -->
+			<p ng-bind-html = "vm.main.content | transformLineBreaks"></p>
+		</div>
+	</div>
+	
+	<page-footer></page-footer>
+</div>

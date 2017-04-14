@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="spapp">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>SP Mean App</title>
+		<link rel="stylesheet" href="/stylesheets/style.css">
+		<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+	</head>
+	<body ng-view>
+	    <script src="/angular/angular.min.js"></script>
+	    <script src="/libs/angular-route.min.js"></script>
+	    <script src="/libs/angular-sanitize.min.js"></script>
+	    <script src="/javascripts/jquery.min.js"></script>
+	    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+	
+		<!-- script src="/angular/spapp.min.js"></script-->
+	    <script src="/spapp.js"></script>
+	    <script src="/controllers/home.controller.js"></script>
+	    <script src="/controllers/about.controller.js"></script>
+	    <script src="/controllers/locationDetails.controller.js"></script>
+
+	    <script src="/commons/services/data.service.js"></script>
+	    <script src="/commons/services/geo.service.js"></script>
+
+	    <script src="/commons/filters/formatDistance.filter.js"></script>
+	    <script src="/commons/filters/transformLineBreaks.filter.js"></script>
+
+	    <script src="/commons/directives/ratingStars.directive.js"></script>
+	    <script src="/commons/directives/pageHeader.directive.js"></script>
+	    <script src="/commons/directives/pageFooter.directive.js"></script>
+	    <script src="/commons/directives/navigation.directive.js"></script>
+	</body>
+
+</html>
