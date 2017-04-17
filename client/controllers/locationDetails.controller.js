@@ -12,8 +12,8 @@
 	 * Is bound to the scope with controllerAs option.
 	 * Inject parameters as an array of strings to avoid issues at minification.
 	 */
-	locationDetailsCtrl.$inject = ['$routeParams', 'dataService'];
-	function locationDetailsCtrl($routeParams, dataService) {
+	locationDetailsCtrl.$inject = ['$routeParams', '$uibModal', 'dataService'];
+	function locationDetailsCtrl($routeParams, $uibModal, dataService) {
 		// controller hook, binds controller to the scope (controllerAs)
 		var vm = this;
 		vm.locationid = $routeParams.locationid;
@@ -37,5 +37,21 @@
 					vm.message = "Sorry, something's gone wrong ";
 					console.log(er);
 				});
+		
+		vm.openReviewForm = function() {
+			var modalInstance = $uibModal.open({
+				templateUrl: '/views/reviewModal.view.html',
+				controller: 'reviewModalCtrl as vm',
+				resolve: {
+					locationData: function() {	// map parameter to a function
+						// should return an object or a single value
+						return {
+							locationId: vm.locationid,
+							locationName: vm.data.location.name
+						};
+					}
+				}
+			});
+		};
 	}
 })();

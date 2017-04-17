@@ -4,7 +4,7 @@
 	 * Angular module setter.
 	 * http://usejsdoc.org/
 	 */
-	angular.module('spapp', ['ngRoute', 'ngSanitize']);
+	angular.module('spapp', ['ngRoute', 'ngSanitize', 'ui.bootstrap']);
 	
 	/**
 	 * Angular config function.
