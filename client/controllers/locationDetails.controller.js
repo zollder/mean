@@ -33,9 +33,9 @@
 						title: vm.data.location.name
 					};
 				},
-				function(er) {
+				function(error) {
 					vm.message = "Sorry, something's gone wrong ";
-					console.log(er);
+					console.log(error);
 				});
 		
 		vm.openReviewForm = function() {
@@ -52,6 +52,13 @@
 					}
 				}
 			});
+
+			// push saved review data into array of reviews when modal promise is resolved
+			// "result" is resolved when a modal is closed and rejected when a modal is dismissed.
+			modalInstance.result
+				.then(function(data) {
+					vm.data.location.reviews.push(data);
+				});
 		};
 	}
 })();
