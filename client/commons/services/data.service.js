@@ -16,8 +16,8 @@
 	dataService.$inject = ['$http'];
 	function dataService($http) {
 		var locationsByCoordinates = function(lat, lng) {
-			return $http.get('/api/locations?lat=' + lat + '&lng=' + lng + '&radius=20');
-			//return $http.get('/api/locations?lat=45.48288&lng=-73.574884&radius=5');
+//			return $http.get('/api/locations?lat=' + lat + '&lng=' + lng + '&radius=20');
+			return $http.get('/api/locations?lat=45.48288&lng=-73.574884&radius=5');
 		};
 
 		var locationById = function(locationid) {

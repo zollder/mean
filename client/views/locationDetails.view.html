@@ -11,7 +11,7 @@
 					<p>{{ vm.data.location.address }}</p>
 
 					<div class="panel panel-primary">
-						<div class="panel-heading">
+						<div class="panel-heading clearfix">
 							<h2 class="panel-title">Opening hours</h2>
 						</div>
 						<div class="panel-body">
@@ -23,7 +23,7 @@
 						</div>
 					</div>
 					<div class="panel panel-primary">
-						<div class="panel-heading">
+						<div class="panel-heading clearfix">
 							<h2 class="panel-title">Facilities</h2>
 						</div>
 						<div class="panel-body">
@@ -35,7 +35,7 @@
 				</div>
 				<div class="col-xs-12 col-sm-6 location-map">
 					<div class="panel panel-primary">
-						<div class="panel-heading">
+						<div class="panel-heading clearfix">
 							<h2 class="panel-title">Location map</h2>
 						</div>
 					</div>
@@ -47,20 +47,20 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="panel panel-primary review-panel">
-						<div class="panel-heading">
-							<a ng-click="vm.openReviewForm()" class="btn btn-default pull-right">Add review</a>
-							<h2 class="panel-title">Customer reviews</h2>
+						<div class="panel-heading clearfix">
+							<h4 class="panel-title pull-left">Customer reviews</h4>
+							<div class="btn btn-default pull-right">
+								<a ng-click="vm.openReviewForm()">Add review</a>
+							</div>
 						</div>
 						<div class="panel-body review-container">
 							<div class="row">
 								<div class="review" ng-repeat="review in vm.data.location.reviews | orderBy:'createdOn':true">
-									<div class="well well-sm review-header">
-										<span class="rating" rating-stars rating="review.rating"></span>
-										<span class="reviewAuthor">{{ review.author }}</span>
-										<small class="reviewTimestamp">{{ review.createdOn | date : 'd MMMM yyyy' }}</small>
-									</div>
-									<div class="col-xs-12">
-										<p ng-bind-html="review.reviewText"></p>
+									<span class="rating" rating-stars rating="review.rating"></span>
+									<span class="reviewAuthor">{{ review.author }}</span>
+									<small class="reviewTimestamp">{{ review.createdOn | date : 'd MMMM yyyy' }}</small>
+									<div class="well well-sm">
+										<p ng-bind-html="review.reviewText | transformLineBreaks"></p>
 									</div>
 								</div>
 							</div>

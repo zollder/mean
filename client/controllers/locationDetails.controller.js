@@ -56,8 +56,10 @@
 			// push saved review data into array of reviews when modal promise is resolved
 			// "result" is resolved when a modal is closed and rejected when a modal is dismissed.
 			modalInstance.result
-				.then(function(data) {
-					vm.data.location.reviews.push(data);
+				.then(function(reviewData) {
+					console.log(reviewData.data);
+					var reviews = [];
+					vm.data.location.reviews.push(reviewData.data);
 				});
 		};
 	}
