@@ -64,7 +64,7 @@ userSchema.methods.generateJwt = function() {
 
 	// DO NOT KEEP THE SECRET IN THE CODE!
 	// don't forget to configure the secret in prod env
-	return jwt.sign(data, rocess.env.JWT_SECRET);
+	return jwt.sign(data, process.env.JWT_SECRET);
 };
 
 mongoose.model('User', userSchema);

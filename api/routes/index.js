@@ -4,6 +4,7 @@ var router = express.Router();
 /* Import API controllers */
 var locationsCtrl = require('../controllers/locations');
 var reviewsCtrl = require('../controllers/reviews');
+var authenticationCtrl = require('../controllers/authentication');
 
 /* Map URLs to API controller functions. */
 
@@ -37,5 +38,9 @@ router.put('/locations/:locationId/reviews/:reviewId', reviewsCtrl.updateReview)
 
 /** Removes a review with specified ID from an existing location. */
 router.delete('/locations/:locationId/reviews/:reviewId', reviewsCtrl.removeReview);
+
+/* ---------------------- Authentication----------------------- */
+router.post('/register', authenticationCtrl.register);
+router.post('/login', authenticationCtrl.login);
 
 module.exports = router;
