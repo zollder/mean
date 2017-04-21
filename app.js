@@ -1,3 +1,6 @@
+// environment variables module
+require('dotenv').load();
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,20 +8,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// import the model
-require('./api/models/db')
-
 // minify/uglify
 /*var uglifyJs = require("uglify-js");
 var fs = require('fs');*/
 
+var passport = require('passport');	// before model
+
+/* Import the model and authentication strategy. */
+require('./api/models/db');
+require('./api/config/passport');	// after model
+
 var routesApi = require('./api/routes/index');
 
 var app = express();
-
-// view engine setup
-//app.set('views', path.join(__dirname, 'server', 'views'));
-//app.set('view engine', 'jade');
 
 /*
  * List the files to be minified and uglified in an array,
@@ -42,7 +44,6 @@ fs.writeFile('public/angular/spapp.min.js', uglified.code, function(error) {
 	}
 });*/
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -53,7 +54,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'client')));
 
-//app.use('/', routes);
+// initialize authentication after static and before API routes (protected)
+app.use(passport.initialize());
+
+// API routes
 app.use('/api', routesApi);
 
 app.use(function(req, res) {

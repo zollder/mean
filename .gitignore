@@ -23,7 +23,12 @@ gradle-app.setting
 *.tern-project
 *.log
 
+
 # Frontend libs
 node_modules
 public/bower_components
 public/styles
+/data/
+
+# Environment variables
+*.env
