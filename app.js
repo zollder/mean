@@ -22,7 +22,8 @@ var routesApi = require('./api/routes/index');
 
 var app = express();
 
-// TODO: view engine setup (required to report server errors)
+// view engine setup (required to report server errors)
+app.set('views', path.join(__dirname, 'server', 'views'));
 app.set('view engine', 'jade');
 /*
  * List the files to be minified and uglified in an array,

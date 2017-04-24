@@ -15,9 +15,7 @@ var User = mongoose.model('User');
  * 2. Configure user authenticator.
  * 3. Construct and use.
  */
-
 var options = {usernameField: 'email'};
-
 var authenticator = function(username, password, done) {
 	User.findOne(
 		{ email: username },
@@ -28,7 +26,7 @@ var authenticator = function(username, password, done) {
 			if (!userData) {
 				return done(null, false, { message: 'User not found.' });
 			}
-			if (!User.isValidPassword(password)) {
+			if (!userData.isValidPassword(password)) {
 				return done(null, false, { message: 'Incorrect password.' });
 			}
 			return done(null, userData);
@@ -38,4 +36,3 @@ var authenticator = function(username, password, done) {
 /* Strategy constructor */
 var strategy = new LocalStrategy(options, authenticator);
 passport.use(strategy);
-

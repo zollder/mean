@@ -27,12 +27,12 @@ var userSchema = new mongoose.Schema({
  * Sets a password (with salt) for user schema.
  * Generates salt and hash for a user and adds it to the model instance.
  */
-userSchema.methods.setPassword = function(passwd) {
+userSchema.methods.setPassword = function(password) {
 	// create a random string for salt
 	this.salt = crypto.randomBytes(16).toString('hex');
 
 	// create encrypted password hash
-	this.hash = crypto.pbkdf2Sync(passwd, this.salt, 1000, 64).toString('hex');
+	this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 };
 
 /*
@@ -40,8 +40,8 @@ userSchema.methods.setPassword = function(passwd) {
  * Verifies if the password matches the one on record for the current user model.
  * Returns true on match, or false otherwise.
  */
-userSchema.methods.isValidPassword = function(passwd) {
-	var passHash = crypto.pbkdf2Sync(passwd, this.salt, 1000, 64).toString('hex');
+userSchema.methods.isValidPassword = function(password) {
+	var passHash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 	return this.hash === passHash;
 };
 
