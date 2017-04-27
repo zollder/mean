@@ -1,5 +1,16 @@
 var express = require('express');
 var router = express.Router();
+var jwt = require('express-jwt');	// validates incoming JWT
+
+/*
+ * Configures JWT authentication middleware to express routes.
+ * Validates supplied JWT.
+ * Extracts the payload data and adds it to "req" to use by controller.
+ */
+var auth = jwt({
+	secret: process.env.JWT_SECRET,
+	userProperty: 'payload'
+});
 
 /* Import API controllers */
 var locationsCtrl = require('../controllers/locations');
@@ -31,13 +42,13 @@ router.delete('/locations/:locationId', locationsCtrl.removeLocation);
 router.get('/locations/:locationId/reviews/:reviewId', reviewsCtrl.getReviewById);
 
 /** Adds a review to an existing location document with specified locationId. */
-router.post('/locations/:locationId/reviews', reviewsCtrl.createReview);
+router.post('/locations/:locationId/reviews', auth, reviewsCtrl.createReview);
 
 /** Updates location review for specified location and review IDs. */
-router.put('/locations/:locationId/reviews/:reviewId', reviewsCtrl.updateReview);
+router.put('/locations/:locationId/reviews/:reviewId', auth, reviewsCtrl.updateReview);
 
 /** Removes a review with specified ID from an existing location. */
-router.delete('/locations/:locationId/reviews/:reviewId', reviewsCtrl.removeReview);
+router.delete('/locations/:locationId/reviews/:reviewId', auth, reviewsCtrl.removeReview);
 
 /* ---------------------- Authentication----------------------- */
 router.post('/register', authenticationCtrl.register);

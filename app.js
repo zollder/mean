@@ -67,6 +67,14 @@ app.use(function(req, res) {
 	res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
 
+// catch and handle unauthorized errors (invalid or missing JWT tokens)
+app.use(function(err, req, res, next) {
+	if (err.name === 'UnauthorizedError') {
+		res.status(err.status || 401);
+		res.json({"message" : err.name + ": " + err.message});
+	}
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
