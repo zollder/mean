@@ -64,8 +64,9 @@ module.exports.createReview = function(req, res) {
 		sendJsonResponse(res, 404, { "message":"Missing or invalid locationId."});
 		return;
 	}
-	
-	getAuthor(req, res,	function(req, res, username) {
+	// wrap review creator into getAuthor to validate the user and return a username, if exists
+	// pass username into callback
+	getAuthor(req, res,	function(req, res, username) {	// wrap review creation into callback
 		locationDao.findById(req.params.locationId)
 			.select('reviews')
 			.exec(
@@ -198,13 +199,14 @@ var getAuthor = function(req, res, callback) {
 			if (error) {
 				console.log(error);
 				sendJsonResponse(res, 400, error);
+				return;
 			} else if (!user) {
 				sendJsonResponse(res, 404, { "message":"User not found"});
+				return;
 			} else {
 				callback(req, res, user.name);
 			}
 		});
-		
 };
 
 /*

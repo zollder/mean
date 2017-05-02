@@ -29,6 +29,11 @@
 				controller: 'aboutCtrl',
 				controllerAs: 'vm'
 			})
+			.when('/register', {
+				templateUrl: '/commons/views/register.view.html',
+				controller: 'registerCtrl',
+				controllerAs: 'vm'
+			})
 			.otherwise({redirectTo: '/'});
 
 		// enable html5Mode for pushstate ('#'-less URLs)
