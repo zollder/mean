@@ -2,10 +2,7 @@ var mongoose = require('mongoose');
 var readline = require('readline');
 
 // test using: $ NODE_ENV=production MONGODB_URI=mongodb://<username>:<password>@<host>:<port>/<db-name> nodemon
-var dbUrl = 'mongodb://localhost/mean';
-if (process.env.NODE_ENV === 'production') {
-	dbUrl = process.env.MONGODB_URI;
-}
+var dbUrl = process.env.MONGODB_URI;
 mongoose.connect(dbUrl);
 
 // Log Mongoose events
@@ -77,3 +74,4 @@ process.once('SIGTERM', function() {
 
 // bring in defined schemas and models
 require('./locations-model');
+require('./users-model');

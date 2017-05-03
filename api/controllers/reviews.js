@@ -1,6 +1,7 @@
 
 var mongoose = require( 'mongoose' );
 var locationDao = mongoose.model('Location');
+var userDao = mongoose.model('User');
 
 /* Utility function to build API response with specified status and content. */
 var sendJsonResponse = function(res, status, content) {
@@ -63,41 +64,29 @@ module.exports.createReview = function(req, res) {
 		sendJsonResponse(res, 404, { "message":"Missing or invalid locationId."});
 		return;
 	}
-	locationDao.findById(req.params.locationId)
-		.select('reviews')
-		.exec(
-			function(error, location) {
-				if (error) {
-					sendJsonResponse(res, 404, error);
-					return;
-				}
-				if (!location) {
-					sendJsonResponse(res, 404, { "message":"Location not found, ID:" + req.params.locationId });
-					return;
-				}
-				location.reviews.push({
-					author: req.body.author,
-					rating: req.body.rating,
-					reviewText: req.body.reviewText
-				});
-				location.save(function(err, location) {
-					var savedReview;
-					if (err) {
-						console.log(err);
-						sendJsonResponse(res, 400, err);
+	// wrap review creator into getAuthor to validate the user and return a username, if exists
+	// pass username into callback
+	getAuthor(req, res,	function(req, res, username) {	// wrap review creation into callback
+		locationDao.findById(req.params.locationId)
+			.select('reviews')
+			.exec(
+				function(error, location) {
+					if (error) {
+						sendJsonResponse(res, 404, error);
+						return;
+					} else if (!location) {
+						sendJsonResponse(res, 404, { "message":"Location not found, ID:" + req.params.locationId });
+						return;
 					} else {
-						updateAverageRating(req.params.locationId)
-						// retrieve and return the last sub-document (review)
-						savedReview = location.reviews[location.reviews.length - 1];
-						sendJsonResponse(res, 201, savedReview);
+						addReview(req, res, location, username);
 					}
-				});
-			}
-		);
+				}
+			);		
+	});
 };
 
 /**
- * Updates an existing review sub-document of an existing location document.
+ * Updates an existing review sub-document of an existing locusernameation document.
  */
 module.exports.updateReview = function(req, res) {
 	if (!req.params) {
@@ -105,7 +94,7 @@ module.exports.updateReview = function(req, res) {
 		return;
 	}
 
-	var locationId = req.params.locationId;
+	var locationId = req.params.locationId;username
 	var reviewId = req.params.reviewId;
 	if (!locationId || !reviewId) {
 		sendJsonResponse(res, 404, { "message":"Missing location and/or review ID."});
@@ -197,34 +186,80 @@ module.exports.removeReview = function(req, res) {
 		});
 };
 
+/*
+ * Finds user name for specified email and passes it to a given callback.
+ */
+var getAuthor = function(req, res, callback) {
+	if (!req.payload || !req.payload.email) {
+		sendJsonResponse(res, 404, { "message":"Missing user email"});
+		return;
+	}
+	userDao.findOne({ email:req.payload.email })
+		.exec(function(error, user) {
+			if (error) {
+				console.log(error);
+				sendJsonResponse(res, 400, error);
+				return;
+			} else if (!user) {
+				sendJsonResponse(res, 404, { "message":"User not found"});
+				return;
+			} else {
+				callback(req, res, user.name);
+			}
+		});
+};
+
+/*
+ * Parses and saves user review with associated reviewer details.
+ */
+var addReview = function(req, res, location, author) {
+	location.reviews.push({
+		author: author,
+		rating: req.body.rating,
+		reviewText: req.body.reviewText
+	});
+	location.save(function(err, location) {
+		var savedReview;
+		if (err) {
+			console.log(err);
+			sendJsonResponse(res, 400, err);
+		} else {
+			updateAverageRating(req.params.locationId)
+			// retrieve and return the last sub-document (review)
+			savedReview = location.reviews[location.reviews.length - 1];
+			sendJsonResponse(res, 201, savedReview);
+		}
+	});
+};
+
 /* Recalculates and updates average location rating. */
 var updateAverageRating = function(locationId) {
 	locationDao.findById(locationId)
 	.select('rating reviews')
 	.exec(
-			function(error, location) {
-				if (error) {
-					console.log(error);
-					return;
-				}
-				
-				var reviewCount, totalRating, averageRating;
-				if (location.reviews && location.reviews.length > 0) {
-					reviewCount = location.reviews.length;
-					totalRating = 0;
-					for (i=0; i<reviewCount; i++) {
-						totalRating = totalRating + location.reviews[i].rating;
-					}
-					averageRating = parseInt(totalRating/reviewCount, 10);
-					location.rating = averageRating;
-					location.save(function(err) {
-						if (err) {
-							console.log(error);
-						} else {
-							console.log("Re-calculated average rating: "+ averageRating);
-						}
-					});
-				}
+		function(error, location) {
+			if (error) {
+				console.log(error);
+				return;
 			}
+			
+			var reviewCount, totalRating, averageRating;
+			if (location.reviews && location.reviews.length > 0) {
+				reviewCount = location.reviews.length;
+				totalRating = 0;
+				for (i=0; i<reviewCount; i++) {
+					totalRating = totalRating + location.reviews[i].rating;
+				}
+				averageRating = parseInt(totalRating/reviewCount, 10);
+				location.rating = averageRating;
+				location.save(function(err) {
+					if (err) {
+						console.log(error);
+					} else {
+						console.log("Re-calculated average rating: "+ averageRating);
+					}
+				});
+			}
+		}
 	);
 }
