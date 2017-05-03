@@ -11,7 +11,7 @@
 	function pageFooter() {
 		return {
 			restrict: 'EA',
-			templateUrl: '/commons/directives/pageFooter.template.html'
+			templateUrl: '/commons/directives/templates/pageFooter.template.html'
 		};
 	}
 })();

@@ -30,8 +30,13 @@
 				controllerAs: 'vm'
 			})
 			.when('/register', {
-				templateUrl: '/commons/views/register.view.html',
+				templateUrl: '/views/register.view.html',
 				controller: 'registerCtrl',
+				controllerAs: 'vm'
+			})
+			.when('/login', {
+				templateUrl: '/views/login.view.html',
+				controller: 'loginCtrl',
 				controllerAs: 'vm'
 			})
 			.otherwise({redirectTo: '/'});

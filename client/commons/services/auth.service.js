@@ -1,7 +1,7 @@
 /* IIFE wrapper */
 (function() {
 	/**
-	 * Service: authService
+	 * Authentication service implementation.
 	 */
 	angular
 		.module('spapp')
@@ -33,16 +33,7 @@
 		 * Saves registered user data in the browser's local storage.
 		 */
 		var registerUser = function(user) {
-			return $http.post('/api/register', user);	// return ???
-/*				.then(
-					function(response) {
-						console.log(JSON.stringify(response.data));
-						saveToken(response.data.token);
-					},
-					function(error) {
-						vm.message = "Registration error";
-						console.log(error);
-					});*/
+			return $http.post('/api/register', user);
 		};
 
 		/*
@@ -50,16 +41,7 @@
 		 * Saves generated JWT token in the browser's local storage.
 		 */
 		var loginUser = function(user) {
-			return $http.post('/api/login', user)
-			.then(
-				function(response) {
-					console.log(JSON.stringify(response.data));
-					getJwtToken(response.data.token);
-				},
-				function(error) {
-					vm.message = "Login error";
-					console.log(error);
-				});
+			return $http.post('/api/login', user);
 		};
 
 		/*

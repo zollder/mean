@@ -14,7 +14,7 @@
 			scope: {
 				content: '=content' // header data object
 			},
-			templateUrl: '/commons/directives/pageHeader.template.html'
+			templateUrl: '/commons/directives/templates/pageHeader.template.html'
 		};
 	}
 })();

@@ -20,7 +20,7 @@
 				thisRating: '=rating' // get value from "rating" attribute
 			},
 			// template : "{{ thisRating }}"
-			templateUrl: '/commons/directives/ratingStars.template.html'
+			templateUrl: '/commons/directives/templates/ratingStars.template.html'
 		};
 	}
 })();
