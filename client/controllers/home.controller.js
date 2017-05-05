@@ -54,8 +54,8 @@
 		vm.showError = function(error) {
 			$scope.$apply(function() {
 				vm.message = error.message;
-				// TODO: remove this code once geoservice is up
-				dataService.getLocations(0, 0)
+				// Note: use this code when geoservice API is down
+				/*dataService.getLocations(0, 0)
 					.then(
 						function(response) {
 							vm.message = response.data.length > 0 ? "" : "No locations found";
@@ -64,7 +64,7 @@
 						function(er) {
 							vm.message = "Sorry, something's gone wrong ";
 							console.log(er);
-						});
+						});*/
 			});
 		};
 		

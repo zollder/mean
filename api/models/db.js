@@ -3,6 +3,7 @@ var readline = require('readline');
 
 // test using: $ NODE_ENV=production MONGODB_URI=mongodb://<username>:<password>@<host>:<port>/<db-name> nodemon
 var dbUrl = process.env.MONGODB_URI;
+mongoose.Promise = global.Promise;
 mongoose.connect(dbUrl);
 
 // Log Mongoose events

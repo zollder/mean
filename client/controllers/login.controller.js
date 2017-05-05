@@ -34,7 +34,7 @@
 		 */
 		vm.returnPage = $location.search().page || '/';
 
-		/*
+		/**
 		 * User sign in.
 		 * Saves token data in a local browser storage.
 		 * Redirects the user to the last visited page.
@@ -54,7 +54,7 @@
 			authService.login(vm.credentials)
 				.then(
 					function(response) {
-						console.log("User login: " + JSON.stringify(response.data));
+						// console.log("User login: " + JSON.stringify(response.data));
 						authService.saveToken(response.data.token);
 						
 						// clear query string and redirect

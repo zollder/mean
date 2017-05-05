@@ -50,7 +50,8 @@
 						<div class="panel-heading clearfix">
 							<h4 class="panel-title pull-left">Customer reviews</h4>
 							<div class="btn btn-default pull-right">
-								<a ng-click="vm.openReviewForm()">Add review</a>
+								<a ng-show="vm.isLoggedIn" ng-click="vm.openReviewForm()">Add review</a>
+								<a ng-hide="vm.isLoggedIn" href="/login?page={{ vm.currentPath }}">Login to add review</a>
 							</div>
 						</div>
 						<div class="panel-body review-container">

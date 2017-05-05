@@ -12,17 +12,20 @@
 	 * Is bound to the scope with controllerAs option.
 	 * Inject parameters as an array of strings to avoid issues at minification.
 	 */
-	locationDetailsCtrl.$inject = ['$routeParams', '$uibModal', 'dataService'];
-	function locationDetailsCtrl($routeParams, $uibModal, dataService) {
+	locationDetailsCtrl.$inject = ['$routeParams', '$location', '$uibModal', 'dataService', 'authService'];
+	function locationDetailsCtrl($routeParams, $location, $uibModal, dataService, authService) {
 		// controller hook, binds controller to the scope (controllerAs)
 		var vm = this;
 		vm.locationid = $routeParams.locationid;
+		vm.currentPath = $location.path();
 		
 		vm.pageHeader = {
 			title: vm.locationid
 		};
 
 		vm.message = "Retrieving location ...";
+		
+		vm.isLoggedIn = authService.isLoggedIn();
 		
 		dataService.getLocationById(vm.locationid)
 			.then(
