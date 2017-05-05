@@ -1,6 +1,6 @@
 /*
  * Authentication configuration note.
- * Use Passport Node module to authentication application users.
+ * Uses Passport Node module to authenticate application users.
  * Supports several authentication strategies (..., local, OAuth, etc.).
  */
 

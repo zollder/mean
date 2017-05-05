@@ -55,7 +55,7 @@
 			authService.register(vm.credentials)
 				.then(
 					function(response) {
-						console.log("Register user: " + JSON.stringify(response.data));
+						// console.log("Register user: " + JSON.stringify(response.data));
 						authService.saveToken(response.data.token);
 						
 						// clear query string and redirect
