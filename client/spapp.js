@@ -12,7 +12,7 @@
 	 * Note: templates are injected into the layout.jade div(ng-view)
 	 * @param $routeProvider
 	 */
-	function config($routeProvider, $locationProvider) {
+	function config($routeProvider, $locationProvider, $qProvider) {
 		$routeProvider
 			.when('/', {
 				templateUrl: '/views/home.view.html',
@@ -46,6 +46,8 @@
 			enabled: true,
 			requireBase: false
 		});
+
+		$qProvider.errorOnUnhandledRejections(false);
 	}
 	
 	/*
@@ -54,5 +56,5 @@
 	 */
 	angular
 	.module('spapp')
-	.config(['$routeProvider', '$locationProvider', config]);
+	.config(['$routeProvider', '$locationProvider', '$qProvider', config]);
 })();
