@@ -17,6 +17,8 @@ body {
 	padding-top: 7.5px;
 }
 
+.angular-google-map-container { height: 400px; }
+
 #filter {
 	margin-left: 4px;
 	margin-bottom: 4px;

@@ -4,7 +4,8 @@
 	 * Angular module setter.
 	 * http://usejsdoc.org/
 	 */
-	angular.module('spapp', ['ngRoute', 'ngSanitize', 'ui.bootstrap']);
+	angular.module('spapp',
+			['ngRoute', 'ngSanitize', 'ui.bootstrap']);
 	
 	/**
 	 * Angular config function.
@@ -13,6 +14,7 @@
 	 * @param $routeProvider
 	 */
 	function config($routeProvider, $locationProvider, $qProvider) {
+
 		$routeProvider
 			.when('/', {
 				templateUrl: '/views/home.view.html',
@@ -55,6 +57,6 @@
 	 * Pass config through route provider as dependency.
 	 */
 	angular
-	.module('spapp')
-	.config(['$routeProvider', '$locationProvider', '$qProvider', config]);
+		.module('spapp')
+		.config(['$routeProvider', '$locationProvider', '$qProvider', config]);
 })();
